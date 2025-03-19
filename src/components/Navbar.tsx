@@ -24,14 +24,14 @@ const Navbar = () => {
         <Link to="/" className="text-2xl font-bold mb-4 md:mb-0">
           Samvidhaan Samvaad
         </Link>
-        
+
         <div className="flex items-center space-x-4">
           {isAuthenticated ? (
             <>
               <div className="flex items-center mr-4">
-                <Flame 
-                  className={`fire-icon mr-1 ${user && user.aura > 0 ? 'text-aura-positive animate-fire-pulse' : 'text-aura-negative'}`} 
-                  size={20} 
+                <Flame
+                  className={`fire-icon mr-1 ${user && user.aura > 0 ? 'text-aura-positive animate-fire-pulse' : 'text-aura-negative'}`}
+                  size={20}
                 />
                 <span className="font-semibold">{user?.aura || 0}</span>
               </div>
@@ -41,17 +41,16 @@ const Navbar = () => {
               <Link to="/articles" className="hover:text-constitution-orange transition-colors">
                 Constitutional Articles
               </Link>
-              
+
               {/* User Profile Display */}
               <div className="flex items-center ml-2 mr-2">
-                <Avatar className="h-8 w-8 bg-constitution-orange text-white mr-2">
+                <Avatar className="h-8 w-8 bg-constitution-orange text-black mr-2">
                   <AvatarFallback>{user ? getInitials(user.username) : "U"}</AvatarFallback>
                 </Avatar>
                 <span className="hidden md:inline-block">{user?.username}</span>
               </div>
-              
-              <Button 
-                variant="outline" 
+
+              <Button
                 onClick={() => logout()}
                 className="text-white border-white hover:bg-white hover:text-constitution-blue"
               >
@@ -63,14 +62,13 @@ const Navbar = () => {
               <Link to="/articles" className="hover:text-constitution-orange transition-colors">
                 Constitutional Articles
               </Link>
-              <Button 
-                variant="outline" 
+              <Button
                 onClick={() => navigate("/login")}
                 className="text-white border-white hover:bg-white hover:text-constitution-blue"
               >
                 Login
               </Button>
-              <Button 
+              <Button
                 onClick={() => navigate("/signup")}
                 className="bg-constitution-orange hover:bg-orange-600 text-white"
               >

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -51,7 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Mock user for demo purposes
       if (email === "demo@example.com" && password === "password") {
         const userData: User = {
@@ -61,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           aura: 50,
           joinDate: new Date(),
         };
-        
+
         setUser(userData);
         localStorage.setItem("user", JSON.stringify(userData));
         toast({
@@ -88,7 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Mock user creation
       const userData: User = {
         id: "user_" + Date.now().toString(),
@@ -97,7 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         aura: 0,
         joinDate: new Date(),
       };
-      
+
       setUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));
       toast({

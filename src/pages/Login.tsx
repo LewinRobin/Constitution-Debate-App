@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -17,10 +16,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    console.log(e);
     setError("");
     setIsLoading(true);
-    
+
     try {
       await login(email, password);
       navigate("/dashboard");
@@ -36,7 +35,7 @@ const Login = () => {
     setEmail("demo@example.com");
     setPassword("password");
     setIsLoading(true);
-    
+
     try {
       await login("demo@example.com", "password");
       navigate("/dashboard");
@@ -50,7 +49,7 @@ const Login = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+
       <div className="flex-1 flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader>
@@ -83,21 +82,21 @@ const Login = () => {
                   required
                 />
               </div>
-              
+
               {error && (
                 <div className="text-sm text-red-500">{error}</div>
               )}
-              
-              <Button 
-                type="submit" 
+
+              <Button
+                type="submit"
                 className="w-full bg-constitution-blue hover:bg-blue-800"
                 disabled={isLoading}
               >
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
-              
+
               {/* Demo login button - for demonstration only */}
-              <Button 
+              <Button
                 type="button"
                 variant="outline"
                 className="w-full mt-2"

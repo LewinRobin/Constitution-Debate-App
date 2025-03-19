@@ -12,19 +12,19 @@ const Dashboard = () => {
   const { user } = useAuth();
   const { opinions, articles } = useData();
   const navigate = useNavigate();
-  
+
   if (!user) {
     navigate("/login");
     return null;
   }
-  
+
   // Get user's opinions
   const userOpinions = opinions.filter(opinion => opinion.userId === user.id);
-  
+
   // Calculate total likes and dislikes received on user's opinions
   const totalLikes = userOpinions.reduce((acc, opinion) => acc + opinion.likes, 0);
   const totalDislikes = userOpinions.reduce((acc, opinion) => acc + opinion.dislikes, 0);
-  
+
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -36,26 +36,26 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+
       <main className="flex-1 py-8 px-4">
         <div className="container mx-auto max-w-6xl">
           <h1 className="text-3xl font-bold mb-8">My Dashboard</h1>
-          
+
           {/* User Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription>Aura Points</CardDescription>
                 <div className="flex items-center">
-                  <Flame 
-                    className={`fire-icon mr-2 ${user.aura > 0 ? 'text-aura-positive animate-fire-pulse' : 'text-aura-negative'}`} 
-                    size={24} 
+                  <Flame
+                    className={`fire-icon mr-2 ${user.aura > 0 ? 'text-aura-positive animate-fire-pulse' : 'text-aura-negative'}`}
+                    size={24}
                   />
                   <CardTitle className="text-2xl">{user.aura}</CardTitle>
                 </div>
               </CardHeader>
             </Card>
-            
+
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription>Member Since</CardDescription>
@@ -65,7 +65,7 @@ const Dashboard = () => {
                 </div>
               </CardHeader>
             </Card>
-            
+
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription>Opinions Shared</CardDescription>
@@ -75,7 +75,7 @@ const Dashboard = () => {
                 </div>
               </CardHeader>
             </Card>
-            
+
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription>Received Votes</CardDescription>
@@ -92,7 +92,7 @@ const Dashboard = () => {
               </CardHeader>
             </Card>
           </div>
-          
+
           {/* User Aura Explanation */}
           <Card className="mb-8">
             <CardHeader>
@@ -136,19 +136,19 @@ const Dashboard = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           {/* Recent Opinions */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold mb-4">My Recent Opinions</h2>
-            
+
             {userOpinions.length > 0 ? (
               <div className="space-y-4">
                 {userOpinions.slice(0, 5).map(opinion => {
                   const relatedArticle = articles.find(article => article.id === opinion.articleId);
-                  
+
                   return (
-                    <Card key={opinion.id} className="cursor-pointer hover:shadow-md transition-shadow" 
-                          onClick={() => navigate(`/article/${opinion.articleId}`)}>
+                    <Card key={opinion.id} className="cursor-pointer hover:shadow-md transition-shadow"
+                      onClick={() => navigate(`/article/${opinion.articleId}`)}>
                       <CardHeader className="pb-2">
                         <CardTitle className="text-lg">{relatedArticle?.title || "Unknown Article"}</CardTitle>
                         <CardDescription className="flex justify-between">
@@ -171,7 +171,7 @@ const Dashboard = () => {
                     </Card>
                   );
                 })}
-                
+
                 {userOpinions.length > 5 && (
                   <div className="text-center mt-4">
                     <Button variant="outline">View All Opinions</Button>
@@ -184,7 +184,7 @@ const Dashboard = () => {
                   <p className="text-muted-foreground mb-4">
                     You haven't shared any opinions yet
                   </p>
-                  <Button 
+                  <Button
                     onClick={() => navigate("/articles")}
                     className="bg-constitution-blue hover:bg-blue-800"
                   >
@@ -196,7 +196,7 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
-      
+
       <footer className="bg-constitution-dark text-white py-6 mt-auto">
         <div className="container mx-auto px-4 text-center">
           <p>&copy; {new Date().getFullYear()} Samvidhaan Samvaad. All rights reserved.</p>
