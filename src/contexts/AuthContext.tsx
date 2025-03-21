@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface User {
   id: string;
@@ -9,16 +12,19 @@ interface User {
   joinDate: Date;
 }
 
+// create AuthContext type.
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  // This type can also be functions and they are declared here.
   login: (email: string, password: string) => Promise<void>;
   signup: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   updateUserAura: (newAura: number) => void;
 }
 
+// Auth context can have either undefined or AuthContextType type value.
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
@@ -45,14 +51,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // For demo purposes, we'll use localStorage to simulate authentication
   // In a real app, this would use API calls to a backend server
-  const login = async (email: string, password: string) => {
+  const login = async (username: string, password: string) => {
     setIsLoading(true);
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Mock user for demo purposes
-      if (email === "demo@example.com" && password === "password") {
+      if (username === "demo@example.com" && password === "password") {
         const userData: User = {
           id: "123456",
           username: "DemoUser",
@@ -67,8 +71,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           title: "Login successful",
           description: "Welcome back!",
         });
-      } else {
-        throw new Error("Invalid credentials");
+      }
+      else {
+        const response = await axios.post(`${API_URL}/login`, {
+          username: username,
+          password: password,
+        });
+        const userData: User = {
+          id: response.data.user.id,
+          username: response.data.user.username,
+          email: response.data.user.email,
+          // TODO: here aura and joinDate are actually fake. Make attributes called aura and joinDate in db
+          aura: 50,
+          joinDate: new Date(),
+        };
+
+        setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+        toast({
+          title: "Login successful",
+          description: "Welcome back!",
+        });
       }
     } catch (error) {
       toast({
@@ -82,6 +105,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // TODO: use this function to authenticate signup.
   const signup = async (username: string, email: string, password: string) => {
     setIsLoading(true);
     try {
