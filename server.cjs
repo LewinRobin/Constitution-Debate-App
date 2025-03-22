@@ -111,14 +111,14 @@ app.post('/api/signup', async (req, res) => {
 // 2. Login Route
 app.post('/api/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    // Find user by username
-    const user = await User.findOne({ username });
+    // Find user by email
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid username or password'
+        message: 'Invalid email or password'
       });
     }
 

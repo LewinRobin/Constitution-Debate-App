@@ -45,9 +45,9 @@ const Navbar = () => {
               {/* User Profile Display */}
               <div className="flex items-center ml-2 mr-2">
                 <Avatar className="h-8 w-8 bg-constitution-orange text-black mr-2">
-                  <AvatarFallback>{user ? getInitials(user.username) : "U"}</AvatarFallback>
+                  <AvatarFallback>{user ? getInitials(user.fullName) : "U"}</AvatarFallback>
                 </Avatar>
-                <span className="hidden md:inline-block">{user?.username}</span>
+                <span className="hidden md:inline-block">{user?.fullName}</span>
               </div>
 
               <Button

@@ -9,7 +9,7 @@ import Navbar from "@/components/Navbar";
 import axios from 'axios';
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -22,7 +22,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      await login(username, password);
+      await login(email, password);
       navigate("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to log in");
@@ -33,7 +33,7 @@ const Login = () => {
 
   // For demo purposes only - should be removed in a real app
   const handleDemoLogin = async () => {
-    setUsername("demo@example.com");
+    setEmail("demo@example.com");
     setPassword("password");
     setIsLoading(true);
 
@@ -62,13 +62,13 @@ const Login = () => {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">username</Label>
+                <Label htmlFor="email">email</Label>
                 <Input
-                  id="username"
-                  type="username"
+                  id="email"
+                  type="email"
                   placeholder="you@example.com"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>

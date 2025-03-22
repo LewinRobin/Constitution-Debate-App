@@ -6,6 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 interface User {
   id: string;
+  fullName: string,
   username: string;
   email: string;
   aura: number;
@@ -51,14 +52,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // For demo purposes, we'll use localStorage to simulate authentication
   // In a real app, this would use API calls to a backend server
-  const login = async (username: string, password: string) => {
+  const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
 
       // Mock user for demo purposes
-      if (username === "demo@example.com" && password === "password") {
+      if (email === "demo@example.com" && password === "password") {
         const userData: User = {
           id: "123456",
+          fullName: "Demo User",
           username: "DemoUser",
           email: "demo@example.com",
           aura: 50,
@@ -74,11 +76,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       else {
         const response = await axios.post(`${API_URL}/login`, {
-          username: username,
+          email: email,
           password: password,
         });
         const userData: User = {
           id: response.data.user.id,
+          fullName: response.data.user.fullName,
           username: response.data.user.username,
           email: response.data.user.email,
           // TODO: here aura and joinDate are actually fake. Make attributes called aura and joinDate in db
