@@ -18,8 +18,12 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const { signup } = useAuth();
+  const { user, signup } = useAuth();
 
+  if (user) {
+    navigate("/dashboard");
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

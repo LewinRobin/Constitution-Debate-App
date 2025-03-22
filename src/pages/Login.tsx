@@ -13,8 +13,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
+
+  if (user) {
+    navigate("/dashboard");
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
