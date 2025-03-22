@@ -99,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       toast({
         title: "Login failed",
-        description: error instanceof Error ? error.message : "Unknown error occurred",
+        description: (error.response && error.response.data) ? error.response.data.message : "Unknown error occurred",
         variant: "destructive",
       });
       throw error;
@@ -140,7 +140,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       toast({
         title: "Signup failed",
-        description: error instanceof Error ? error.message : "Unknown error occurred",
+        description: (error.response && error.response.data) ? error.response.data.message : "Unknown error occurred",
         variant: "destructive",
       });
       throw error;

@@ -30,7 +30,7 @@ const Login = () => {
       await login(email, password);
       navigate("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to log in");
+      setError((err.response && err.response.data) ? err.response.data.message : "Failed to log in");
     } finally {
       setIsLoading(false);
     }
@@ -46,7 +46,7 @@ const Login = () => {
       await login("demo@example.com", "password");
       navigate("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to log in with demo account");
+      setError((err.response && err.response.data) ? err.response.data.message : "Failed to log in with demo account");
     } finally {
       setIsLoading(false);
     }
