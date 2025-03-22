@@ -20,7 +20,7 @@ interface AuthContextType {
   isLoading: boolean;
   // This type can also be functions and they are declared here.
   login: (email: string, password: string) => Promise<void>;
-  signup: (username: string, email: string, password: string) => Promise<void>;
+  signup: (fullName: string, username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   updateUserAura: (newAura: number) => void;
 }
@@ -109,15 +109,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // TODO: use this function to authenticate signup.
-  const signup = async (username: string, email: string, password: string) => {
+  const signup = async (fullName: string, username: string, email: string, password: string) => {
     setIsLoading(true);
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await axios.post(`${API_URL}/signup`, {
+        fullName: fullName,
+        email: email,
+        username: username,
+        password: password,
+      });
+      console.log('Sign successful', response.data)
+
 
       // Mock user creation
       const userData: User = {
         id: "user_" + Date.now().toString(),
+        fullName,
         username,
         email,
         aura: 0,

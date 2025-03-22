@@ -33,14 +33,7 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`${API_URL}/signup`, {
-        fullName: fullName,
-        email: email,
-        username: username,
-        password: password,
-      });
-      console.log('Sign successful', response.data)
-
+      await signup(fullName, username, email, password)
       navigate('/dashboard')
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create account");
