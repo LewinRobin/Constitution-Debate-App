@@ -46,6 +46,10 @@ const userSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  aura: {
+    type: Number,
+    default: 0,
   }
 });
 
@@ -148,7 +152,9 @@ app.post('/api/login', async (req, res) => {
         id: user._id,
         fullName: user.fullName,
         username: user.username,
-        email: user.email
+        email: user.email,
+        createdAt: user.createdAt,
+        aura: user.aura
       }
     });
   } catch (error) {

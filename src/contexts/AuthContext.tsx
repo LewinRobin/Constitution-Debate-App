@@ -84,9 +84,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           fullName: response.data.user.fullName,
           username: response.data.user.username,
           email: response.data.user.email,
-          // TODO: here aura and joinDate are actually fake. Make attributes called aura and joinDate in db
-          aura: 50,
-          joinDate: new Date(),
+          joinDate: response.data.user.createdAt,
+          aura: response.data.user.aura,
         };
 
         setUser(userData);
