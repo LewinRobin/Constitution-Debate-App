@@ -13,6 +13,7 @@ import Articles from "@/pages/Articles";
 import ArticleDetail from "@/pages/ArticleDetail";
 import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/NotFound";
+import ArticleCreation from "./pages/ArticleCreation";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
               <Route path="/articles" element={<Articles />} />
               <Route path="/article/:id" element={<ArticleDetail />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/creation" element={<ArticleCreation />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

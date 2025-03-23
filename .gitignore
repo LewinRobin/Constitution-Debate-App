@@ -28,3 +28,6 @@ dist-ssr
 
 # backend folders
 server/
+
+#other files
+data.txt

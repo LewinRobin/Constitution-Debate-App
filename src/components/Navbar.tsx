@@ -39,8 +39,13 @@ const Navbar = () => {
                 Dashboard
               </Link>
               <Link to="/articles" className="hover:text-constitution-orange transition-colors">
-                Constitutional Articles
+                Articles
               </Link>
+              {user.email.endsWith('@samvadh.com') &&
+                <Link to="/creation" className="hover:text-constitution-orange transition-colors">
+                  Create Articles
+                </Link>
+              }
 
               {/* User Profile Display */}
               <div className="flex items-center ml-2 mr-2">

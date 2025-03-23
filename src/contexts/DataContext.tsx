@@ -1,7 +1,9 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "./AuthContext";
+import axios from "axios";
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export interface Article {
   id: string;
@@ -176,32 +178,54 @@ const mockOpinions: Opinion[] = [
 ];
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [articles, setArticles] = useState<Article[]>(mockArticles);
-  const [opinions, setOpinions] = useState<Opinion[]>(mockOpinions);
-  const { user, updateUserAura } = useAuth();
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [opinions, setOpinions] = useState<Opinion[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
   const { toast } = useToast();
-  
-  // Track user votes (in a real app, this would be stored in a database)
-  const [userVotes, setUserVotes] = useState<Record<string, "for" | "against">>({});
 
-  // Load data from localStorage for persistence in demo
   useEffect(() => {
-    const storedArticles = localStorage.getItem("articles");
-    const storedOpinions = localStorage.getItem("opinions");
-    const storedUserVotes = localStorage.getItem("userVotes");
-    
-    if (storedArticles) setArticles(JSON.parse(storedArticles));
-    if (storedOpinions) setOpinions(JSON.parse(storedOpinions));
-    if (storedUserVotes) setUserVotes(JSON.parse(storedUserVotes));
-  }, []);
+    const fetchArticles = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/articles`, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`,
+          }
+        });
+        setArticles(response.data);
+      } catch (error: any) {
+        setError("Failed to fetch articles: " + error.message);
+        toast({ title: "Error", description: "Failed to fetch articles", variant: "destructive" });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Save data to localStorage when it changes
-  useEffect(() => {
-    localStorage.setItem("articles", JSON.stringify(articles));
-    localStorage.setItem("opinions", JSON.stringify(opinions));
-    localStorage.setItem("userVotes", JSON.stringify(userVotes));
-  }, [articles, opinions, userVotes]);
+    const fetchOpinions = async () => {
+      try {
+        const articleOpinions = await Promise.all(
+          articles.map(async (article) => {
+            const response = await axios.get(`${API_URL}/opinions/${article.id}`);
+            return { articleId: article.id, opinions: response.data };
+          })
+        );
+        const allOpinions = articleOpinions.flatMap((item) => item.opinions);
+        setOpinions(allOpinions);
+      } catch (error: any) {
+        setError("Failed to fetch opinions: " + error.message);
+        toast({ title: "Error", description: "Failed to fetch opinions", variant: "destructive" });
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    if (user) {
+      fetchArticles().then(() => fetchOpinions());
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
   const getArticleById = (id: string) => {
     return articles.find(article => article.id === id);
   };
@@ -237,7 +261,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     setOpinions([...opinions, newOpinion]);
-    
+
     toast({
       title: "Opinion shared",
       description: "Your opinion has been posted successfully",
@@ -256,12 +280,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Check if user has already voted on this article
     const existingVote = userVotes[articleId];
-    
+
     setArticles(articles.map(article => {
       if (article.id === articleId) {
         let newVotesFor = article.votesFor;
         let newVotesAgainst = article.votesAgainst;
-        
+
         // If user is changing their vote
         if (existingVote) {
           if (existingVote === "for" && voteType === "against") {
@@ -280,15 +304,15 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             newVotesAgainst++;
           }
         }
-        
+
         return { ...article, votesFor: newVotesFor, votesAgainst: newVotesAgainst };
       }
       return article;
     }));
-    
+
     // Update user votes record
     setUserVotes({ ...userVotes, [articleId]: voteType });
-    
+
     toast({
       title: "Vote recorded",
       description: `You voted ${voteType} this article`,
@@ -310,12 +334,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Check if user has already liked or disliked
         const hasLiked = opinion.likedBy.includes(user.id);
         const hasDisliked = opinion.dislikedBy.includes(user.id);
-        
+
         let newLikes = opinion.likes;
         let newDislikes = opinion.dislikes;
         let newLikedBy = [...opinion.likedBy];
         let newDislikedBy = [...opinion.dislikedBy];
-        
+
         // Handle like
         if (voteType === "like") {
           if (hasLiked) {
@@ -326,26 +350,26 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Like
             newLikes++;
             newLikedBy.push(user.id);
-            
+
             // Remove from disliked if previously disliked
             if (hasDisliked) {
               newDislikes--;
               newDislikedBy = newDislikedBy.filter(id => id !== user.id);
             }
-            
+
             // Update aura points of the opinion author (except for own opinions)
             if (opinion.userId !== user.id) {
               // Find the author's opinions to update aura display
               const authorOpinions = opinions.filter(o => o.userId === opinion.userId);
               const newAura = opinion.userAura + 1;
-              
+
               // Update all opinions by this author to show new aura (in a real app this would be handled differently)
               authorOpinions.forEach(o => {
                 o.userAura = newAura;
               });
             }
           }
-        } 
+        }
         // Handle dislike
         else if (voteType === "dislike") {
           if (hasDisliked) {
@@ -356,19 +380,19 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Dislike
             newDislikes++;
             newDislikedBy.push(user.id);
-            
+
             // Remove from liked if previously liked
             if (hasLiked) {
               newLikes--;
               newLikedBy = newLikedBy.filter(id => id !== user.id);
             }
-            
+
             // Update aura points of the opinion author (except for own opinions)
             if (opinion.userId !== user.id) {
               // Find the author's opinions to update aura display
               const authorOpinions = opinions.filter(o => o.userId === opinion.userId);
               const newAura = opinion.userAura - 1;
-              
+
               // Update all opinions by this author to show new aura
               authorOpinions.forEach(o => {
                 o.userAura = newAura;
@@ -376,10 +400,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
           }
         }
-        
-        return { 
-          ...opinion, 
-          likes: newLikes, 
+
+        return {
+          ...opinion,
+          likes: newLikes,
           dislikes: newDislikes,
           likedBy: newLikedBy,
           dislikedBy: newDislikedBy,
@@ -387,7 +411,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return opinion;
     }));
-    
+
     toast({
       title: "Vote recorded",
       description: `You ${voteType}d this opinion`,
