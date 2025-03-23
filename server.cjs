@@ -241,4 +241,87 @@ app.get('/api/profile', auth, async (req, res) => {
 
 // Server
 const PORT = process.env.PORT;
+// Article Schema
+const articleSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  summary: { type: String, required: true },
+  content: { type: String, required: true },
+  author: { type: String, required: true },
+  publishDate: { type: Date, default: Date.now },
+  imageUrl: { type: String },
+  votesFor: { type: Number, default: 0 },
+  votesAgainst: { type: Number, default: 0 },
+  category: { type: String, required: true },
+});
+
+const Article = mongoose.model('Article', articleSchema);
+
+// Opinion Schema
+const opinionSchema = new mongoose.Schema({
+  articleId: { type: String, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  username: { type: String, required: true },
+  userAura: { type: Number, required: true },
+  content: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+  likes: { type: Number, default: 0 },
+  dislikes: { type: Number, default: 0 },
+  likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  dislikedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+});
+
+const Opinion = mongoose.model('Opinion', opinionSchema);
+
+
+// Article Routes
+app.post('/api/articles', auth, async (req, res) => {
+  try {
+    const article = new Article(req.body);
+    await article.save();
+    res.status(201).json(article);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/articles', async (req, res) => {
+  try {
+    const articles = await Article.find();
+    res.json(articles);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/articles/:id', async (req, res) => {
+  try {
+    const article = await Article.findById(req.params.id);
+    if (!article) return res.status(404).json({ message: 'Article not found' });
+    res.json(article);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+// Opinion Routes
+app.post('/api/opinions', auth, async (req, res) => {
+  try {
+    const opinion = new Opinion({ ...req.body, userId: req.user._id, username: req.user.username, userAura: req.user.aura });
+    await opinion.save();
+    res.status(201).json(opinion);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/opinions/:articleId', async (req, res) => {
+  try {
+    const opinions = await Opinion.find({ articleId: req.params.articleId });
+    res.json(opinions);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

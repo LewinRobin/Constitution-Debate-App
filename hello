@@ -1,0 +1,79 @@
+
+  {
+    "id": "1",
+    "title": "The Essence of Article 21: Right to Life and Personal Liberty",
+    "summary": "Exploring the interpretation and scope of Article 21 of the Indian Constitution in modern context.",
+    "content": `<p>Article 21 of the Indian Constitution states: "No person shall be deprived of his life or personal liberty except according to procedure established by law." This simple yet profound statement has been the foundation of numerous landmark judgments that have expanded civil liberties in India.</p>
+    
+    <p>The Supreme Court's interpretation of Article 21 has evolved significantly over time. Initially, in the A.K. Gopalan case (1950), the Court adopted a narrow interpretation. However, post-emergency, in Maneka Gandhi vs. Union of India (1978), the Court revolutionized its approach, holding that the procedure established by law must be "fair, just and reasonable."</p>
+    
+    <p>The scope of Article 21 now extends far beyond its literal meaning, encompassing:</p>
+    
+    <ul>
+      <li>Right to live with human dignity</li>
+      <li>Right to health</li>
+      <li>Right to education</li>
+      <li>Right to clean environment</li>
+      <li>Right to privacy</li>
+    </ul>
+    
+    <p>Recent judgments like K.S. Puttaswamy vs. Union of India (2017) have further cemented the right to privacy as a fundamental right under Article 21. The Court held that "the right to privacy is protected as an intrinsic part of the right to life and personal liberty under Article 21."</p>
+    
+    <p>However, challenges remain. Balancing national security concerns with individual liberty continues to be contentious. The use of preventive detention laws, restrictions during public emergencies, and limitations in the name of public order raise important constitutional questions.</p>
+    
+    <p>As we move forward, the interpretation of Article 21 must continue to evolve to address new challenges posed by technological advancements, changing social norms, and emerging threats to personal liberty.</p>`,
+    "author": "Dr. Rajendra Prasad",
+    "publishDate": new Date("2023-10-15"),
+    "imageUrl": "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aW5kaWFuJTIwY29uc3RpdHV0aW9ufGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+    "votesFor": 120,
+    "votesAgainst": 45,
+    "category": "Fundamental Rights"
+  },
+  {
+    id: "2",
+    title: "Federalism in India: Cooperative or Competitive?",
+    summary: "Analyzing the federal structure of India and the balance of power between the Union and State governments.",
+    content: `<p>India's Constitution establishes a federal system with a strong central government, often described as "quasi-federal" or "federalism with a unitary bias." This unique structure raises important questions about the distribution of power and resources between the Union and State governments.</p>
+    
+    <p>The Seventh Schedule of the Constitution divides legislative powers between the Union and States through three lists: Union List, State List, and Concurrent List. However, the Union enjoys residuary powers and can legislate on state subjects under exceptional circumstances.</p>
+    
+    <p>Over the decades, India has witnessed phases of both cooperative and competitive federalism. While cooperative federalism emphasizes collaboration and mutual support, competitive federalism encourages states to compete for resources, investment, and development.</p>
+    
+    <p>Recent initiatives like the Goods and Services Tax (GST) represent a move towards cooperative federalism, with the GST Council serving as a forum for collective decision-making. Similarly, the NITI Aayog was established to foster cooperative federalism by involving states in the national development agenda.</p>
+    
+    <p>However, challenges persist. Fiscal federalism remains contentious, with debates over revenue sharing, grants-in-aid, and financial autonomy of states. Political tensions between Union and State governments led by different parties often exacerbate these issues.</p>
+    
+    <p>The COVID-19 pandemic has brought these federalism debates to the forefront, highlighting questions about disaster management, public health responsibilities, and coordination during national crises.</p>
+    
+    <p>As India moves forward, finding the right balance between a strong center and autonomous states will be crucial for addressing regional disparities and ensuring inclusive development.</p>`,
+    author: "Prof. Amartya Sen",
+    publishDate: new Date("2023-09-28"),
+    imageUrl: "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aW5kaWFuJTIwcGFybGlhbWVudHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+    votesFor: 87,
+    votesAgainst: 92,
+    category: "Federal Structure"
+  },
+  {
+    id: "3",
+    title: "Uniform Civil Code: Constitutional Vision and Contemporary Debates",
+    summary: "Examining Article 44 of the Directive Principles and the ongoing discourse on a Uniform Civil Code in India.",
+    content: `<p>Article 44 of the Indian Constitution, part of the Directive Principles of State Policy, states: "The State shall endeavor to secure for the citizens a uniform civil code throughout the territory of India." This provision has been the subject of intense debate, touching upon questions of religious freedom, personal laws, and gender equality.</p>
+    
+    <p>India currently follows a system of personal laws where different religious communities are governed by their respective laws in matters of marriage, divorce, inheritance, and adoption. The Uniform Civil Code (UCC) proposes a common set of civil laws for all citizens, irrespective of their religion.</p>
+    
+    <p>Proponents of the UCC argue that it would promote national integration, gender justice, and equality before the law. They point to discriminatory practices in various personal laws that disadvantage women and violate constitutional guarantees of equality.</p>
+    
+    <p>Critics, however, express concerns about cultural homogenization and the potential infringement on religious freedom protected under Articles 25-28. They argue that religious communities should have the autonomy to regulate their personal affairs according to their traditions.</p>
+    
+    <p>The Supreme Court has repeatedly emphasized the need for a UCC, notably in cases like Mohd. Ahmed Khan vs. Shah Bano Begum (1985), Sarla Mudgal vs. Union of India (1995), and more recently in Shayara Bano vs. Union of India (2017). However, implementation has remained politically challenging.</p>
+    
+    <p>Goa provides an interesting example as the only Indian state with a uniform civil code, inherited from the Portuguese Civil Code of 1867. Its implementation offers insights into the practical aspects of a UCC.</p>
+    
+    <p>Moving forward, any attempt to implement a UCC must balance constitutional principles with religious and cultural sensitivities. Inclusive consultations with various stakeholders, gradual reforms, and focus on gender equality could be key to building consensus on this contentious issue.</p>`,
+    author: "Justice Fali S. Nariman",
+    publishDate: new Date("2023-11-05"),
+    imageUrl: "https://images.unsplash.com/photo-1601961405399-801e039bbaa4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGluZGlhbiUyMGxhd3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+    votesFor: 156,
+    votesAgainst: 178,
+    category: "Directive Principles"
+  }

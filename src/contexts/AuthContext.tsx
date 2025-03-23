@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import axios from 'axios';
 
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 interface User {
@@ -11,6 +12,7 @@ interface User {
   email: string;
   aura: number;
   joinDate: Date;
+  token: string | null;
 }
 
 // create AuthContext type.
@@ -65,6 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           email: "demo@example.com",
           aura: 50,
           joinDate: new Date(),
+          token: null
         };
 
         setUser(userData);
@@ -86,8 +89,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           email: response.data.user.email,
           joinDate: response.data.user.createdAt,
           aura: response.data.user.aura,
+          token: response.data.token
         };
-
         setUser(userData);
         localStorage.setItem("user", JSON.stringify(userData));
         toast({
@@ -128,6 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         email,
         aura: 0,
         joinDate: new Date(),
+        token: response.data.token,
       };
 
       setUser(userData);
