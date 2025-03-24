@@ -144,7 +144,7 @@ const Dashboard = () => {
             {userOpinions.length > 0 ? (
               <div className="space-y-4">
                 {userOpinions.slice(0, 5).map(opinion => {
-                  const relatedArticle = articles.find(article => article.id === opinion.articleId);
+                  const relatedArticle = articles.find(article => article._id === opinion.articleId);
 
                   return (
                     <Card key={opinion.id} className="cursor-pointer hover:shadow-md transition-shadow"

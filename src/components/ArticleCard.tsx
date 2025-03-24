@@ -12,7 +12,7 @@ interface ArticleCardProps {
 
 const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
   const navigate = useNavigate();
-  
+
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -24,9 +24,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
   return (
     <Card className="h-full flex flex-col hover:shadow-lg transition-shadow">
       <div className="h-48 overflow-hidden">
-        <img 
-          src={article.imageUrl} 
-          alt={article.title} 
+        <img
+          src={article.imageUrl}
+          alt={article.title}
           className="w-full h-full object-cover"
         />
       </div>
@@ -50,8 +50,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
           <span className="text-gray-700 font-semibold">{article.votesAgainst}</span>
           <span className="ml-1 text-muted-foreground">Oppose</span>
         </div>
-        <Button 
-          onClick={() => navigate(`/article/${article.id}`)}
+        <Button
+          onClick={() => navigate(`/article/${article._id}`)}
           className="bg-constitution-blue hover:bg-blue-800"
         >
           Read Article

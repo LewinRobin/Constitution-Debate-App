@@ -6,7 +6,7 @@ import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export interface Article {
-  id: string;
+  _id: string;
   title: string;
   summary: string;
   content: string;
@@ -56,7 +56,7 @@ export const useData = () => {
 // Mock data
 const mockArticles: Article[] = [
   {
-    id: "1",
+    _id: "1",
     title: "The Essence of Article 21: Right to Life and Personal Liberty",
     summary: "Exploring the interpretation and scope of Article 21 of the Indian Constitution in modern context.",
     content: `<p>Article 21 of the Indian Constitution states: "No person shall be deprived of his life or personal liberty except according to procedure established by law." This simple yet profound statement has been the foundation of numerous landmark judgments that have expanded civil liberties in India.</p>
@@ -86,7 +86,7 @@ const mockArticles: Article[] = [
     category: "Fundamental Rights"
   },
   {
-    id: "2",
+    _id: "2",
     title: "Federalism in India: Cooperative or Competitive?",
     summary: "Analyzing the federal structure of India and the balance of power between the Union and State governments.",
     content: `<p>India's Constitution establishes a federal system with a strong central government, often described as "quasi-federal" or "federalism with a unitary bias." This unique structure raises important questions about the distribution of power and resources between the Union and State governments.</p>
@@ -110,7 +110,7 @@ const mockArticles: Article[] = [
     category: "Federal Structure"
   },
   {
-    id: "3",
+    _id: "3",
     title: "Uniform Civil Code: Constitutional Vision and Contemporary Debates",
     summary: "Examining Article 44 of the Directive Principles and the ongoing discourse on a Uniform Civil Code in India.",
     content: `<p>Article 44 of the Indian Constitution, part of the Directive Principles of State Policy, states: "The State shall endeavor to secure for the citizens a uniform civil code throughout the territory of India." This provision has been the subject of intense debate, touching upon questions of religious freedom, personal laws, and gender equality.</p>
@@ -178,10 +178,11 @@ const mockOpinions: Opinion[] = [
 ];
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [opinions, setOpinions] = useState<Opinion[]>([]);
+  const [articles, setArticles] = useState<Article[]>(mockArticles);
+  const [opinions, setOpinions] = useState<Opinion[]>(mockOpinions);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userVotes, setUserVotes] = useState<Record<string, "for" | "against">>({});
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -206,8 +207,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const articleOpinions = await Promise.all(
           articles.map(async (article) => {
-            const response = await axios.get(`${API_URL}/opinions/${article.id}`);
-            return { articleId: article.id, opinions: response.data };
+            const response = await axios.get(`${API_URL}/opinions/${article._id}`);
+            return { articleId: article._id, opinions: response.data };
           })
         );
         const allOpinions = articleOpinions.flatMap((item) => item.opinions);
@@ -227,7 +228,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [user]);
   const getArticleById = (id: string) => {
-    return articles.find(article => article.id === id);
+    return articles.find(article => article._id === id);
   };
 
   const getOpinionsByArticleId = (articleId: string) => {
@@ -236,8 +237,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .sort((a, b) => b.likes - a.likes);
   };
 
-  const addOpinion = (articleId: string, content: string) => {
-    if (!user) {
+  const addOpinion = async (articleId: string, content: string) => {
+    if (!user || !user.token) {
       toast({
         title: "Authentication required",
         description: "Please log in to share your opinion",
@@ -246,26 +247,49 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    const newOpinion: Opinion = {
-      id: `opinion_${Date.now()}`,
-      articleId,
-      userId: user.id,
-      username: user.username,
-      userAura: user.aura,
-      content,
-      createdAt: new Date(),
-      likes: 0,
-      dislikes: 0,
-      likedBy: [],
-      dislikedBy: [],
-    };
+    try {
+      const response = await axios.post(
+        `${API_URL}/opinions`,
+        {
+          articleId,
+          userId: user.id,
+          username: user.username,
+          userAura: user.aura,
+          content,
+          likes: 0,
+          dislikes: 0,
+          likedBy: ["650c8a1f2b8d3b001c8e4a57"],
+          dislikedBy: ["650c8a1f2b8d3b001c8e4a57"],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      alert(response.data)
 
-    setOpinions([...opinions, newOpinion]);
+      // Add the new opinion to our state
+      const newOpinion = {
+        ...response.data,
+        createdAt: new Date(response.data.createdAt)
+      };
 
-    toast({
-      title: "Opinion shared",
-      description: "Your opinion has been posted successfully",
-    });
+      setOpinions(prev => [...prev, newOpinion]);
+
+      toast({
+        title: "Opinion shared",
+        description: "Your opinion has been posted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.response?.data?.message || "Failed to add opinion",
+        variant: "destructive",
+      });
+      alert(error)
+      throw error;
+    }
   };
 
   const voteOnArticle = (articleId: string, voteType: "for" | "against") => {
@@ -282,7 +306,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const existingVote = userVotes[articleId];
 
     setArticles(articles.map(article => {
-      if (article.id === articleId) {
+      if (article._id === articleId) {
         let newVotesFor = article.votesFor;
         let newVotesAgainst = article.votesAgainst;
 
