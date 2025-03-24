@@ -267,7 +267,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           },
         }
       );
-      alert(response.data)
 
       // Add the new opinion to our state
       const newOpinion = {
@@ -287,7 +286,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         description: error.response?.data?.message || "Failed to add opinion",
         variant: "destructive",
       });
-      alert(error)
       throw error;
     }
   };
