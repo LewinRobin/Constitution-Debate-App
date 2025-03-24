@@ -128,7 +128,7 @@ const mockArticles: Article[] = [
     <p>Moving forward, any attempt to implement a UCC must balance constitutional principles with religious and cultural sensitivities. Inclusive consultations with various stakeholders, gradual reforms, and focus on gender equality could be key to building consensus on this contentious issue.</p>`,
     author: "Justice Fali S. Nariman",
     publishDate: new Date("2023-11-05"),
-    imageUrl: "https://images.unsplash.com/photo-1601961405399-801e039bbaa4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGluZGlhbiUyMGxhd3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+    imageUrl: "",
     votesFor: 156,
     votesAgainst: 178,
     category: "Directive Principles"
