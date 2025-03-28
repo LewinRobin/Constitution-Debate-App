@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,7 @@ interface OpinionCardProps {
 const OpinionCard: React.FC<OpinionCardProps> = ({ opinion }) => {
   const { voteOnOpinion } = useData();
   const { user } = useAuth();
-  
+
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -33,9 +32,9 @@ const OpinionCard: React.FC<OpinionCardProps> = ({ opinion }) => {
           <div className="flex items-center">
             <span className="font-semibold mr-2">{opinion.username}</span>
             <div className="flex items-center">
-              <Flame 
-                className={`fire-icon mr-1 ${opinion.userAura > 0 ? 'text-aura-positive' : 'text-aura-negative'}`} 
-                size={16} 
+              <Flame
+                className={`fire-icon mr-1 ${opinion.userAura > 0 ? 'text-aura-positive' : 'text-aura-negative'}`}
+                size={16}
               />
               <span className="text-sm">{opinion.userAura}</span>
             </div>
@@ -50,8 +49,8 @@ const OpinionCard: React.FC<OpinionCardProps> = ({ opinion }) => {
       </CardContent>
       <CardFooter className="pt-0 flex justify-end">
         <div className="flex items-center space-x-4">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             size="sm"
             className={`flex items-center ${hasLiked ? 'text-green-600' : ''}`}
             onClick={() => voteOnOpinion(opinion.id, "like")}
@@ -59,8 +58,8 @@ const OpinionCard: React.FC<OpinionCardProps> = ({ opinion }) => {
             <ThumbsUp size={16} className="mr-1" />
             <span>{opinion.likes}</span>
           </Button>
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             size="sm"
             className={`flex items-center ${hasDisliked ? 'text-red-600' : ''}`}
             onClick={() => voteOnOpinion(opinion.id, "dislike")}

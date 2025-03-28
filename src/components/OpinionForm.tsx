@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,16 +14,16 @@ const OpinionForm: React.FC<OpinionFormProps> = ({ articleId }) => {
   const { addOpinion } = useData();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!content.trim()) return;
-    
+
     addOpinion(articleId, content);
     setContent("");
   };
-  
+
   const handleLoginRedirect = () => {
     navigate("/login");
   };
@@ -32,7 +31,7 @@ const OpinionForm: React.FC<OpinionFormProps> = ({ articleId }) => {
   return (
     <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
       <h3 className="text-xl font-semibold mb-4">Share Your Constitutional Perspective</h3>
-      
+
       {isAuthenticated ? (
         <form onSubmit={handleSubmit}>
           <Textarea
@@ -41,8 +40,8 @@ const OpinionForm: React.FC<OpinionFormProps> = ({ articleId }) => {
             onChange={(e) => setContent(e.target.value)}
             className="min-h-32 mb-4"
           />
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="bg-constitution-blue hover:bg-blue-800"
             disabled={!content.trim()}
           >

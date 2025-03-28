@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
@@ -12,10 +11,10 @@ interface ArticleVoteSectionProps {
 const ArticleVoteSection: React.FC<ArticleVoteSectionProps> = ({ articleId }) => {
   const { voteOnArticle, hasVotedOnArticle, getArticleById } = useData();
   const { isAuthenticated } = useAuth();
-  
+
   const article = getArticleById(articleId);
   const userVote = hasVotedOnArticle(articleId);
-  
+
   if (!article) return null;
 
   return (
@@ -24,13 +23,12 @@ const ArticleVoteSection: React.FC<ArticleVoteSectionProps> = ({ articleId }) =>
       <p className="text-center text-muted-foreground mb-6">
         What is your stance on this constitutional interpretation? Vote to express your perspective.
       </p>
-      
+
       <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-        <Button 
+        <Button
           variant={userVote === "for" ? "default" : "outline"}
-          className={`flex-1 flex items-center justify-center gap-2 ${
-            userVote === "for" ? "bg-constitution-blue" : ""
-          }`}
+          className={`flex-1 flex items-center justify-center gap-2 ${userVote === "for" ? "bg-constitution-blue" : ""
+            }`}
           onClick={() => voteOnArticle(articleId, "for")}
           disabled={!isAuthenticated}
         >
@@ -40,12 +38,11 @@ const ArticleVoteSection: React.FC<ArticleVoteSectionProps> = ({ articleId }) =>
             <span className="text-xs">{article.votesFor} votes</span>
           </div>
         </Button>
-        
-        <Button 
+
+        <Button
           variant={userVote === "against" ? "default" : "outline"}
-          className={`flex-1 flex items-center justify-center gap-2 ${
-            userVote === "against" ? "bg-constitution-blue" : ""
-          }`}
+          className={`flex-1 flex items-center justify-center gap-2 ${userVote === "against" ? "bg-constitution-blue" : ""
+            }`}
           onClick={() => voteOnArticle(articleId, "against")}
           disabled={!isAuthenticated}
         >
@@ -56,7 +53,7 @@ const ArticleVoteSection: React.FC<ArticleVoteSectionProps> = ({ articleId }) =>
           </div>
         </Button>
       </div>
-      
+
       {!isAuthenticated && (
         <p className="text-sm text-muted-foreground mt-4">
           Please log in to express your constitutional stance
