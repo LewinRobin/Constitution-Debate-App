@@ -48,7 +48,7 @@ const ArticleCreation = () => {
     }
   };
 
-  return (
+  return <>
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 py-8 px-4">
@@ -75,7 +75,13 @@ const ArticleCreation = () => {
         </div>
       </main>
     </div>
-  );
+
+    <footer className="bg-constitution-dark text-white py-6 mt-auto">
+      <div className="container mx-auto px-4 text-center">
+        <p>&copy; {new Date().getFullYear()} Samvidhaan Samvaad. All rights reserved.</p>
+      </div>
+    </footer>
+  </>
 };
 
 export default ArticleCreation;

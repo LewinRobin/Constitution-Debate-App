@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import { useData } from "@/contexts/DataContext";
 import ArticleCard from "@/components/ArticleCard";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const { articles } = useData();
 
   // Get featured articles (first 3 articles)
@@ -32,13 +34,18 @@ const Index = () => {
             >
               Explore Articles
             </Button>
-            <Button
-              onClick={() => navigate("/signup")}
-              className="border-white text-white hover:bg-white hover:text-constitution-blue"
-              size="lg"
-            >
-              Join the Community
-            </Button>
+            {!isAuthenticated ?
+              <Button
+                onClick={() => navigate("/signup")}
+                className="border-white text-white hover:bg-white hover:text-constitution-blue"
+                size="lg"
+              >
+                Join the Community
+              </Button>
+              :
+              null
+            }
+
           </div>
         </div>
       </section>

@@ -29,7 +29,7 @@ const Navbar = () => {
             <>
               <div className="flex items-center mr-4">
                 <Flame
-                  className={`fire-icon mr-1 ${user && user.aura > 0 ? 'text-aura-positive animate-fire-pulse' : 'text-aura-negative'}`}
+                  className={`fire-icon mr-1 ${user && user.aura > 0 ? 'text-aura-positive animate-fire-pulse' : 'text-white'}`}
                   size={20}
                 />
                 <span className="font-semibold">{user?.aura || 0}</span>
