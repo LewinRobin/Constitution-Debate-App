@@ -5,12 +5,15 @@ import ArticleCard from "@/components/ArticleCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Book } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Articles = () => {
   const { articles } = useData();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   // Extract unique categories
   const categories = [...new Set(articles.map(article => article.category))];
 
@@ -90,15 +93,27 @@ const Articles = () => {
               </Button>
             </div>
           )}
+          {!isAuthenticated && filteredArticles.length > 0 ?
+            < div className="text-center py-4">
+              <p className="mb-4 text-muted-foreground">
+                Please Log in to read more articles and share your opinions.
+              </p>
+              <Button onClick={() => navigate("/login")}>
+                Log In to show all articles
+              </Button>
+            </div>
+            :
+            null
+          }
         </div>
-      </main>
+      </main >
 
       <footer className="bg-constitution-dark text-white py-6 mt-auto">
         <div className="container mx-auto px-4 text-center">
           <p>&copy; {new Date().getFullYear()} Samvidhaan Samvaad. All rights reserved.</p>
         </div>
       </footer>
-    </div>
+    </div >
   );
 };
 
