@@ -226,10 +226,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else {
       setLoading(false);
     }
-    return () => {
-      setOpinions(mockOpinions)
-      setArticles(mockArticles)
-    }
   }, [user]);
   const getArticleById = (id: string) => {
     return articles.find(article => article._id === id);
