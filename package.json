@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite",
     "start": "node server.cjs",
-    "all": "concurrently \"nodemon server.cjs -e ejs,cjs,js,css,html,jpg,png,scss\" \"vite\"",
+    "all": "concurrently \"nodemon server.cjs -e ejs,cjs,js,css,jpg,png,scss\" \"vite\"",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "nodemon --ext ts,tsx,css,cjs --exec \"npx playwright test\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -74,6 +75,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@playwright/test": "^1.51.1",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.3",
