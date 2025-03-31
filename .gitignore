@@ -38,3 +38,5 @@ data.txt
 /blob-report/
 /playwright/.cache/
 test.env
+
+lang.js

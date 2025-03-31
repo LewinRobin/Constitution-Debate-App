@@ -251,6 +251,8 @@ const articleSchema = new mongoose.Schema({
   imageUrl: { type: String },
   votesFor: { type: Number, default: 0 },
   votesAgainst: { type: Number, default: 0 },
+  peopleVotedFor: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  peopleVotedAgainst: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   category: { type: String, required: true },
 });
 
@@ -288,6 +290,54 @@ app.get('/api/articles', async (req, res) => {
   try {
     const articles = await Article.find();
     res.json(articles);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put('/api/articles/:id/vote', auth, async (req, res) => {
+  try {
+    const { voteType } = req.body;
+    const articleId = req.params.id;
+    const userId = req.user._id;
+
+    console.log(`
+    const { voteType } = req.body; ${voteType}
+    const articleId = req.params.id; ${articleId}
+    const userId = req.user._id; ${userId}
+    `)
+
+
+    if (!voteType || !['for', 'against'].includes(voteType)) {
+      return res.status(400).json({ message: 'Invalid vote type' });
+    }
+
+    const article = await Article.findById(articleId);
+    if (!article) return res.status(404).json({ message: 'Article not found' });
+
+    const alreadyVoted = article[`peopleVoted${voteType === 'for' ? 'For' : 'Against'}`].includes(userId);
+    if (alreadyVoted) {
+      return res.status(400).json({
+        message: 'You have already voted on this article',
+        likes: article[`votesFor`],
+      });
+    }
+    const voteField = voteType === 'for' ? 'For' : 'Against';
+    const oppositeVoteField = voteType === 'for' ? 'Against' : 'For';
+
+    article[`votes${voteField}`]++;
+    article[`peopleVoted${voteField}`].push(userId);
+
+    const oppositeVoteIndex = article[`peopleVoted${oppositeVoteField}`].indexOf(userId);
+    if (oppositeVoteIndex > -1) {
+      article[`votes${oppositeVoteField}`]--;
+      article[`peopleVoted${oppositeVoteField}`].splice(oppositeVoteIndex, 1);
+    }
+    await article.save();
+    console.log("i am here");
+    console.log(article);
+
+    res.json(article);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

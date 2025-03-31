@@ -15,6 +15,8 @@ export interface Article {
   imageUrl: string;
   votesFor: number;
   votesAgainst: number;
+  peopleVotesFor: string[];
+  peopleVotesAgainst: string[];
   category: string;
 }
 
@@ -83,6 +85,8 @@ const mockArticles: Article[] = [
     imageUrl: "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aW5kaWFuJTIwY29uc3RpdHV0aW9ufGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
     votesFor: 120,
     votesAgainst: 45,
+    peopleVotesFor: ['user1', 'user2'],
+    peopleVotesAgainst: ['user3', 'user4'],
     category: "Fundamental Rights"
   },
   {
@@ -107,6 +111,8 @@ const mockArticles: Article[] = [
     imageUrl: "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aW5kaWFuJTIwcGFybGlhbWVudHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
     votesFor: 87,
     votesAgainst: 92,
+    peopleVotesFor: ['user1', 'user2'],
+    peopleVotesAgainst: ['user3', 'user4'],
     category: "Federal Structure"
   },
   {
@@ -131,6 +137,8 @@ const mockArticles: Article[] = [
     imageUrl: "https://images.pexels.com/photos/9630216/pexels-photo-9630216.jpeg?auto=compress&cs=tinysrgb&w=600",
     votesFor: 156,
     votesAgainst: 178,
+    peopleVotesFor: ['user1', 'user2'],
+    peopleVotesAgainst: ['user3', 'user4'],
     category: "Directive Principles"
   }
 ];
@@ -194,6 +202,17 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             'Authorization': `Bearer ${user.token}`,
           }
         });
+        const userVotesData = response.data.reduce((acc, curr) => {
+          let voteType = null;
+          if (curr.peopleVotedFor.includes(user.id)) {
+            voteType = "for";
+          } else if (curr.peopleVotedAgainst.includes(user.id)) {
+            voteType = "against";
+          }
+          return { ...acc, [curr._id]: voteType };
+        }, {});
+        setUserVotes(userVotesData);
+
         setArticles(response.data);
       } catch (error: any) {
         setError("Failed to fetch articles: " + error.message);
@@ -290,7 +309,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const voteOnArticle = (articleId: string, voteType: "for" | "against") => {
+  const voteOnArticle = async (articleId: string, voteType: "for" | "against") => {
     if (!user) {
       toast({
         title: "Authentication required",
@@ -333,6 +352,21 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }));
 
     // Update user votes record
+
+    try {
+      const response = await axios.put(`${API_URL}/articles/${articleId}/vote`, { voteType }, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      setArticles(prevArticles => prevArticles.map(a => a._id === articleId ? response.data : a));
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.response?.data?.message || "Failed to vote on article",
+        variant: "destructive",
+      });
+    }
     setUserVotes({ ...userVotes, [articleId]: voteType });
 
     toast({

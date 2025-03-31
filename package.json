@@ -11,7 +11,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "nodemon --ext ts,tsx,css,cjs --exec \"npx playwright test\""
+    "test": "nodemon --ext ts,tsx,css,cjs,env --exec \"npx playwright test\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
