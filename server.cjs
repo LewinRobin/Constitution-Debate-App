@@ -301,11 +301,6 @@ app.put('/api/articles/:id/vote', auth, async (req, res) => {
     const articleId = req.params.id;
     const userId = req.user._id;
 
-    console.log(`
-    const { voteType } = req.body; ${voteType}
-    const articleId = req.params.id; ${articleId}
-    const userId = req.user._id; ${userId}
-    `)
 
 
     if (!voteType || !['for', 'against'].includes(voteType)) {
@@ -334,8 +329,6 @@ app.put('/api/articles/:id/vote', auth, async (req, res) => {
       article[`peopleVoted${oppositeVoteField}`].splice(oppositeVoteIndex, 1);
     }
     await article.save();
-    console.log("i am here");
-    console.log(article);
 
     res.json(article);
   } catch (error) {
