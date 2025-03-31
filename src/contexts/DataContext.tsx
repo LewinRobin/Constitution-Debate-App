@@ -21,7 +21,7 @@ export interface Article {
 }
 
 export interface Opinion {
-  id: string;
+  _id: string;
   articleId: string;
   userId: string;
   username: string;
@@ -145,7 +145,7 @@ const mockArticles: Article[] = [
 
 const mockOpinions: Opinion[] = [
   {
-    id: "101",
+    _id: "101",
     articleId: "1",
     userId: "user1",
     username: "ConstitutionExpert",
@@ -158,7 +158,7 @@ const mockOpinions: Opinion[] = [
     dislikedBy: ["user4"]
   },
   {
-    id: "102",
+    _id: "102",
     articleId: "1",
     userId: "user2",
     username: "LegalScholar",
@@ -171,7 +171,7 @@ const mockOpinions: Opinion[] = [
     dislikedBy: ["user1"]
   },
   {
-    id: "103",
+    _id: "103",
     articleId: "2",
     userId: "user3",
     username: "PolicyAnalyst",
@@ -277,8 +277,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           content,
           likes: 0,
           dislikes: 0,
-          likedBy: ["650c8a1f2b8d3b001c8e4a57"],
-          dislikedBy: ["650c8a1f2b8d3b001c8e4a57"],
+          likedBy: [],
+          dislikedBy: [],
         },
         {
           headers: {
@@ -375,7 +375,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  const voteOnOpinion = (opinionId: string, voteType: "like" | "dislike") => {
+  const voteOnOpinion = async (opinionId: string, voteType: "like" | "dislike") => {
     if (!user) {
       toast({
         title: "Authentication required",
@@ -385,93 +385,36 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    setOpinions(opinions.map(opinion => {
-      if (opinion.id === opinionId) {
-        // Check if user has already liked or disliked
-        const hasLiked = opinion.likedBy.includes(user.id);
-        const hasDisliked = opinion.dislikedBy.includes(user.id);
-
-        let newLikes = opinion.likes;
-        let newDislikes = opinion.dislikes;
-        let newLikedBy = [...opinion.likedBy];
-        let newDislikedBy = [...opinion.dislikedBy];
-
-        // Handle like
-        if (voteType === "like") {
-          if (hasLiked) {
-            // Unlike if already liked
-            newLikes--;
-            newLikedBy = newLikedBy.filter(id => id !== user.id);
-          } else {
-            // Like
-            newLikes++;
-            newLikedBy.push(user.id);
-
-            // Remove from disliked if previously disliked
-            if (hasDisliked) {
-              newDislikes--;
-              newDislikedBy = newDislikedBy.filter(id => id !== user.id);
-            }
-
-            // Update aura points of the opinion author (except for own opinions)
-            if (opinion.userId !== user.id) {
-              // Find the author's opinions to update aura display
-              const authorOpinions = opinions.filter(o => o.userId === opinion.userId);
-              const newAura = opinion.userAura + 1;
-
-              // Update all opinions by this author to show new aura (in a real app this would be handled differently)
-              authorOpinions.forEach(o => {
-                o.userAura = newAura;
-              });
-            }
-          }
+    try {
+      const response = await axios.put(
+        `${API_URL}/opinions/${opinionId}/vote`,
+        { voteType },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
         }
-        // Handle dislike
-        else if (voteType === "dislike") {
-          if (hasDisliked) {
-            // Remove dislike if already disliked
-            newDislikes--;
-            newDislikedBy = newDislikedBy.filter(id => id !== user.id);
-          } else {
-            // Dislike
-            newDislikes++;
-            newDislikedBy.push(user.id);
+      );
 
-            // Remove from liked if previously liked
-            if (hasLiked) {
-              newLikes--;
-              newLikedBy = newLikedBy.filter(id => id !== user.id);
-            }
-
-            // Update aura points of the opinion author (except for own opinions)
-            if (opinion.userId !== user.id) {
-              // Find the author's opinions to update aura display
-              const authorOpinions = opinions.filter(o => o.userId === opinion.userId);
-              const newAura = opinion.userAura - 1;
-
-              // Update all opinions by this author to show new aura
-              authorOpinions.forEach(o => {
-                o.userAura = newAura;
-              });
-            }
-          }
-        }
-
-        return {
-          ...opinion,
-          likes: newLikes,
-          dislikes: newDislikes,
-          likedBy: newLikedBy,
-          dislikedBy: newDislikedBy,
-        };
+      const opinionIndex = opinions.findIndex((opinion) => opinion._id === opinionId);
+      if (opinionIndex !== -1) {
+        const updatedOpinions = [...opinions];
+        updatedOpinions[opinionIndex] = { ...updatedOpinions[opinionIndex], ...response.data };
+        setOpinions(updatedOpinions);
       }
-      return opinion;
-    }));
 
-    toast({
-      title: "Vote recorded",
-      description: `You ${voteType}d this opinion`,
-    });
+      toast({
+        title: "Vote recorded",
+        description: `You ${voteType}d this opinion`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.response?.data?.message || "Failed to vote on opinion",
+        variant: "destructive",
+      });
+      throw error;
+    }
   };
 
   const hasVotedOnArticle = (articleId: string) => {

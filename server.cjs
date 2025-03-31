@@ -367,4 +367,60 @@ app.get('/api/opinions/:articleId', async (req, res) => {
   }
 });
 
+app.put('/api/opinions/:opinionId/vote', auth, async (req, res) => {
+  try {
+    const { opinionId } = req.params;
+    const { voteType } = req.body;
+    const userId = req.user._id;
+
+    // Validate opinionId
+    if (!opinionId || !mongoose.Types.ObjectId.isValid(opinionId)) {
+      return res.status(400).json({ message: 'Invalid opinion ID' });
+    }
+
+    if (!voteType || !['like', 'dislike'].includes(voteType)) {
+      return res.status(400).json({ message: 'Invalid vote type' });
+    }
+
+    const opinion = await Opinion.findById(opinionId);
+    if (!opinion) {
+      return res.status(404).json({ message: 'Opinion not found' });
+    }
+
+    const userAlreadyVoted = opinion[`${voteType}dBy`].includes(userId);
+    if (userAlreadyVoted) {
+      return res.status(400).json({ message: 'You have already voted on this opinion' });
+    }
+
+    const oppositeVoteType = voteType === 'like' ? 'dislike' : 'like';
+    const oppositeVoteIndex = opinion[`${oppositeVoteType}dBy`].indexOf(userId);
+
+    opinion[`${voteType}s`]++;
+    opinion[`${voteType}dBy`].push(userId);
+
+    if (oppositeVoteIndex > -1) {
+      opinion[`${oppositeVoteType}s`]--;
+      opinion[`${oppositeVoteType}dBy`].splice(oppositeVoteIndex, 1);
+    }
+
+
+    // Update author's aura
+    const author = await User.findById(opinion.userId);
+    if (userId !== author._id) {
+      if (author) {
+        author.aura += voteType === 'like' ? 1 : -1;
+        await author.save();
+      }
+    }
+    opinion.userAura = author.aura
+
+    await opinion.save();
+
+    res.json(opinion);
+  } catch (error) {
+    console.error('Error updating opinion vote:', error);
+    res.status(500).json({ error: 'Failed to update opinion vote' });
+  }
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

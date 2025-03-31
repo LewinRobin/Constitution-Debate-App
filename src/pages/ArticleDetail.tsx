@@ -111,7 +111,7 @@ const ArticleDetail = () => {
             {opinions.length > 0 ? (
               <div>
                 {opinions.map(opinion => (
-                  <OpinionCard key={opinion.id} opinion={opinion} />
+                  <OpinionCard key={opinion._id} opinion={opinion} />
                 ))}
               </div>
             ) : (

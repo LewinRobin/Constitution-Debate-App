@@ -53,7 +53,8 @@ const OpinionCard: React.FC<OpinionCardProps> = ({ opinion }) => {
             variant="ghost"
             size="sm"
             className={`flex items-center ${hasLiked ? 'text-green-600' : ''}`}
-            onClick={() => voteOnOpinion(opinion.id, "like")}
+            onClick={() => { voteOnOpinion(opinion._id, "like") }}
+
           >
             <ThumbsUp size={16} className="mr-1" />
             <span>{opinion.likes}</span>
@@ -62,7 +63,7 @@ const OpinionCard: React.FC<OpinionCardProps> = ({ opinion }) => {
             variant="ghost"
             size="sm"
             className={`flex items-center ${hasDisliked ? 'text-red-600' : ''}`}
-            onClick={() => voteOnOpinion(opinion.id, "dislike")}
+            onClick={() => voteOnOpinion(opinion._id, "dislike")}
           >
             <ThumbsDown size={16} className="mr-1" />
             <span>{opinion.dislikes}</span>
